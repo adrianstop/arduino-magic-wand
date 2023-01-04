@@ -19,7 +19,7 @@
 #include <Arduino_LSM9DS1.h>
 
 const float accelerationThreshold = 2.5; // threshold of significant in G's
-const int numSamples = 238;
+const int numSamples = 119;
 
 int samplesRead = numSamples;
 
@@ -37,7 +37,7 @@ void setup() {
 }
 
 void loop() {
-  float aX, aY, aZ, gX, gY, gZ;
+  float aX, aY, aZ, gX, gY, gZ, mX, mY, mZ;
 
   // wait for significant motion
   while (samplesRead == numSamples) {
@@ -66,7 +66,10 @@ void loop() {
       // read the acceleration and gyroscope data
       IMU.readAcceleration(aX, aY, aZ);
       IMU.readGyroscope(gX, gY, gZ);
-
+      if (IMU.magneticFieldAvailable()){
+        IMU.readMagneticField(mX, mY, mZ);        
+      }
+      
       samplesRead++;
 
       // print the data in CSV format
@@ -81,6 +84,12 @@ void loop() {
       Serial.print(gY, 3);
       Serial.print(',');
       Serial.print(gZ, 3);
+      Serial.print(',');
+      Serial.print(mX, 3);
+      Serial.print(',');
+      Serial.print(mY, 3);
+      Serial.print(',');
+      Serial.print(mZ, 3);
       Serial.println();
 
       if (samplesRead == numSamples) {
