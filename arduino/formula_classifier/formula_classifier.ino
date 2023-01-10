@@ -30,6 +30,7 @@
 
 const float accelerationThreshold = 2.5; // threshold of significant in G's
 const int numSamples = 119;
+//const int numAvg = 5;
 
 int samplesRead = numSamples;
 
@@ -139,6 +140,7 @@ void loop() {
 
       // normalize the IMU data between 0 to 1 and store in the model's
       // input tensor
+
       tflInputTensor->data.f[samplesRead * 9 + 0] = ((aX + 4.0) / 8.0); // / tflInputTensor->params.scale + tflInputTensor->params.zero_point;
       tflInputTensor->data.f[samplesRead * 9 + 1] = ((aY + 4.0) / 8.0); // / tflInputTensor->params.scale + tflInputTensor->params.zero_point;
       tflInputTensor->data.f[samplesRead * 9 + 2] = ((aZ + 4.0) / 8.0); // / tflInputTensor->params.scale + tflInputTensor->params.zero_point;
@@ -148,8 +150,18 @@ void loop() {
       tflInputTensor->data.f[samplesRead * 9 + 6] = ((mX + 400.0) / 800.0); // / tflInputTensor->params.scale + tflInputTensor->params.zero_point;
       tflInputTensor->data.f[samplesRead * 9 + 7] = ((mY + 400.0) / 800.0); // / tflInputTensor->params.scale + tflInputTensor->params.zero_point;
       tflInputTensor->data.f[samplesRead * 9 + 8] = ((mZ + 400.0) / 800.0); // / tflInputTensor->params.scale + tflInputTensor->params.zero_point;
+      
+      //Serial.print("samplesRead: ");
+      //Serial.println(samplesRead);
+      
+      //Serial.print("((aX + 4.0) / 8.0): ");
+      //Serial.println(((aX + 4.0) / 8.0));
+      
+      Serial.print("aX: ");
+      Serial.println(tflInputTensor->data.f[samplesRead * 9 + 0]);
 
-      samplesRead++;
+      samplesRead++;      
+            
 
       if (samplesRead == numSamples) {
         // Run inferencing
